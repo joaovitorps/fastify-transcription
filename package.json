@@ -10,7 +10,8 @@
     "infra:down": "docker compose down",
     "local:setup": "npm run env:setup && npm run infra:up",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "type:check": "tsc --noEmit"
   },
   "type": "module",
   "license": "ISC",
