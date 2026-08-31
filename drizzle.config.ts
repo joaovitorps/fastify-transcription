@@ -1,10 +1,17 @@
+import dotenv from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
+
+dotenv.config({ path: [
+  '.env.development.local',
+  '.env.local',
+  '.env',
+] });
 
 export default defineConfig({
   dialect: 'postgresql',
   schema: './src/db/schema.ts',
   out: './drizzle',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgresql://root:root@localhost:5432/ai_social_media',
+    url: process.env.DATABASE_URL!,
   },
 });
