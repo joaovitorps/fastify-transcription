@@ -1,9 +1,12 @@
 import {
     hasZodFastifySchemaValidationErrors,
+    jsonSchemaTransform,
     serializerCompiler,
     validatorCompiler,
     type ZodTypeProvider,
 } from '@fastify/type-provider-zod';
+import swagger from '@fastify/swagger';
+import scalarApiReference from '@scalar/fastify-api-reference';
 import { fastify, type FastifyRequest } from 'fastify';
 import { transcriptionRoutes } from './routes/transcription-route.ts';
 import { type User } from './types/auth.ts';
@@ -14,6 +17,32 @@ const app = fastify({
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
+
+app.register(swagger, {
+  transform: jsonSchemaTransform,
+  openapi: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Fastify Transcription',
+      description: 'API to generate transcriptions from YouTube videos.',
+      version: '1.0.0',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+      },
+    ],
+  },
+});
+
+app.register(scalarApiReference, {
+  routePrefix: '/api/docs',
+  openApiDocumentEndpoints: {
+    json: '/json',
+    yaml: '/yaml',
+  },
+});
 
 app.setErrorHandler((error, _, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
