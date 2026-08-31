@@ -6,10 +6,19 @@ import {
 } from '../models/transcription-model.ts';
 import {
     createTranscriptionSchema,
+    listTranscriptionsSchema,
 } from '../schemas/transcription-schemas.ts';
 import { extractYouTubeId } from '../utils/youtube.ts';
 
 export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
+  app.get('/api/v1/video/transcription', {
+    schema: listTranscriptionsSchema,
+  }, async () => {
+    const transcriptions = await fetchTranscription();
+
+    return { transcriptions };
+  });
+
   app.post('/api/v1/video/transcription', {
     schema: createTranscriptionSchema,
   }, async (request, reply) => {
@@ -32,11 +41,5 @@ export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
     });
 
     return reply.code(201).send(transcription);
-  });
-
-  app.get('/api/v1/video/transcription', async () => {
-    const transcriptions = await fetchTranscription();
-
-    return { transcriptions };
   });
 };
