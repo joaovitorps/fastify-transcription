@@ -1,25 +1,15 @@
 import type { FastifyPluginAsyncZod } from '@fastify/type-provider-zod';
 import { nanoid } from 'nanoid';
 import {
+    createTranscription,
+    fetchTranscription,
+} from '../models/transcription-model.ts';
+import {
     createTranscriptionSchema,
 } from '../schemas/transcription-schemas.ts';
 import { extractYouTubeId } from '../utils/youtube.ts';
 
-type Transcription = {
-  id: string;
-  youtubeUrl: string;
-  youtubeId: string;
-  createdAt: string;
-  createdBy: string;
-  updatedAt: string;
-  content: string;
-};
-
-const transcriptions: Transcription[] = [];
-
 export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
-  const now = () => new Date().toISOString();
-
   app.post('/api/v1/video/transcription', {
     schema: createTranscriptionSchema,
   }, async (request, reply) => {
@@ -33,18 +23,20 @@ export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
       });
     }
 
-    const transcription: Transcription = {
+    const transcription = await createTranscription({
       id: nanoid(),
-      youtubeUrl: url,
-      youtubeId,
-      createdAt: now(),
-      createdBy: userId,
-      updatedAt: now(),
+      youtube_url: url,
+      youtube_id: youtubeId,
       content: 'Transcription will be generated here.',
-    };
-
-    transcriptions.push(transcription);
+      created_by: userId,
+    });
 
     return reply.code(201).send(transcription);
+  });
+
+  app.get('/api/v1/video/transcription', async () => {
+    const transcriptions = await fetchTranscription();
+
+    return { transcriptions };
   });
 };

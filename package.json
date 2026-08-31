@@ -2,9 +2,15 @@
   "name": "fastify-transcription",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node --watch src/server.ts",
+    "dev": "node --env-file=.env.local --watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node --env-file=.env.local dist/server.js",
+    "env:setup": "cp .env.example .env.local",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "local:setup": "npm run env:setup && npm run infra:up",
+    "db:migrate": "npx postgrator --config postgrator.config.json",
+    "db:rollback": "npx postgrator 0 --config postgrator.config.json"
   },
   "type": "module",
   "license": "ISC",
@@ -12,10 +18,13 @@
     "@fastify/type-provider-zod": "1.0.0",
     "fastify": "5.12.1",
     "nanoid": "6.0.1",
+    "pg": "8.23.0",
     "zod": "4.5.4"
   },
   "devDependencies": {
     "@types/node": "26.4.0",
+    "@types/pg": "8.23.1",
+    "postgrator-cli": "10.0.0",
     "typescript": "7.0.2"
   }
 }
