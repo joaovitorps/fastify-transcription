@@ -9,13 +9,14 @@
     "infra:up": "docker compose up -d",
     "infra:down": "docker compose down",
     "local:setup": "npm run env:setup && npm run infra:up",
-    "db:migrate": "npx postgrator --config postgrator.config.json",
-    "db:rollback": "npx postgrator 0 --config postgrator.config.json"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "type": "module",
   "license": "ISC",
   "dependencies": {
     "@fastify/type-provider-zod": "1.0.0",
+    "drizzle-orm": "1.0.0-rc.4",
     "fastify": "5.12.1",
     "nanoid": "6.0.1",
     "pg": "8.23.0",
@@ -24,7 +25,7 @@
   "devDependencies": {
     "@types/node": "26.4.0",
     "@types/pg": "8.23.1",
-    "postgrator-cli": "10.0.0",
+    "drizzle-kit": "1.0.0-rc.4",
     "typescript": "7.0.2"
   }
 }

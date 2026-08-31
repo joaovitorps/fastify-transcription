@@ -23,7 +23,7 @@ app.setErrorHandler((error, _, reply) => {
     });
   }
 
-  return reply.status(500).send({ message: 'Internal Server Error' });
+  return reply.status(500).send({ message: 'Internal Server Error', details: (error as Error).message });
 });
 
 app.get('/', async (request: FastifyRequest) => {

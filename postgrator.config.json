@@ -1,9 +1,0 @@
-{
-  "migrationPattern": "db/migrations/*",
-  "driver": "pg",
-  "host": "localhost",
-  "port": 5432,
-  "database": "ai_social_media",
-  "username": "root",
-  "password": "root"
-}

@@ -1,23 +1,28 @@
-import { pool } from '../db/connection.ts';
+import { desc } from 'drizzle-orm';
+import { db } from '../db/connection.ts';
+import { transcription } from '../db/schema.ts';
 import { type CreateTranscriptionData, type Transcription } from '../types/transcription.ts';
 
 export async function createTranscription(
   data: CreateTranscriptionData,
 ): Promise<Transcription> {
-  const result = await pool.query<Transcription>(
-    `INSERT INTO transcription (id, youtube_url, youtube_id, content, created_by)
-     VALUES ($1, $2, $3, $4, $5)
-     RETURNING *`,
-    [data.id, data.youtube_url, data.youtube_id, data.content, data.created_by],
-  );
+  const [row] = await db
+    .insert(transcription)
+    .values({
+      id: data.id,
+      youtube_url: data.youtube_url,
+      youtube_id: data.youtube_id,
+      content: data.content,
+      created_by: data.created_by,
+    })
+    .returning();
 
-  return result.rows[0];
+  return row;
 }
 
 export async function fetchTranscription(): Promise<Transcription[]> {
-  const result = await pool.query<Transcription>(
-    `SELECT * FROM transcription ORDER BY created_at DESC`,
-  );
-
-  return result.rows;
+  return db
+    .select()
+    .from(transcription)
+    .orderBy(desc(transcription.created_at));
 }
