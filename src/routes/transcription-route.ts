@@ -13,6 +13,13 @@ import {
   listTranscriptionsV2Schema,
 } from "../schemas/transcription-v2-schemas.ts";
 import { extractYouTubeId } from "../utils/youtube.ts";
+import { ERROR_CODES } from "../schemas/error-schemas.ts";
+
+const invalidYouTubeUrlError = {
+  statusCode: 400,
+  message: "The provided URL is not a valid YouTube URL",
+  code: ERROR_CODES.validation,
+};
 
 export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
@@ -50,9 +57,7 @@ export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
 
       const youtubeId = extractYouTubeId(url);
       if (!youtubeId) {
-        return reply.code(400).send({
-          message: "The provided URL is not a valid YouTube URL",
-        });
+        return reply.code(400).send(invalidYouTubeUrlError);
       }
 
       const transcription = await createTranscription({
@@ -77,9 +82,7 @@ export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
 
       const videoId = extractYouTubeId(url);
       if (!videoId) {
-        return reply.code(400).send({
-          message: "The provided URL is not a valid YouTube URL",
-        });
+        return reply.code(400).send(invalidYouTubeUrlError);
       }
 
       const transcription = await createTranscription({

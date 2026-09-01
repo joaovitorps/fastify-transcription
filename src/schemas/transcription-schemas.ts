@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { errorSchema } from './error-schemas.ts';
 
 export const createTranscriptionBodySchema = z.object({
   url: z
@@ -21,16 +22,6 @@ export const listTranscriptionsResponseSchema = z.object({
   transcriptions: z.array(transcriptionSchema),
 });
 
-export const validationErrorSchema = z.object({
-  message: z.string(),
-  issues: z.array(z.unknown()).optional(),
-});
-
-export const internalServerErrorSchema = z.object({
-  message: z.string(),
-  details: z.string(),
-});
-
 export const createTranscriptionSchema = {
   tags: ['transcription'],
   summary: 'Create a video transcription',
@@ -39,8 +30,9 @@ export const createTranscriptionSchema = {
   body: createTranscriptionBodySchema,
   response: {
     201: createTranscriptionResponseSchema,
-    400: validationErrorSchema,
-    500: internalServerErrorSchema,
+    400: errorSchema,
+    409: errorSchema,
+    500: errorSchema,
   },
 };
 
@@ -50,6 +42,6 @@ export const listTranscriptionsSchema = {
   description: 'Returns all the transcriptions registered in the application.',
   response: {
     200: listTranscriptionsResponseSchema,
-    500: internalServerErrorSchema,
+    500: errorSchema,
   },
 };
