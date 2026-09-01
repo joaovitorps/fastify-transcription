@@ -3,13 +3,17 @@ import {
   createTranscription,
   fetchTranscriptionV1,
   fetchTranscriptionV2,
+  getTranscriptionV1ById,
+  getTranscriptionV2ById,
 } from "../models/transcription-model.ts";
 import {
   createTranscriptionSchema,
+  getTranscriptionSchema,
   listTranscriptionsSchema,
 } from "../schemas/transcription-schemas.ts";
 import {
   createTranscriptionV2Schema,
+  getTranscriptionV2Schema,
   listTranscriptionsV2Schema,
 } from "../schemas/transcription-v2-schemas.ts";
 import { extractYouTubeId } from "../utils/youtube.ts";
@@ -21,7 +25,47 @@ const invalidYouTubeUrlError = {
   code: ERROR_CODES.validation,
 };
 
+const transcriptionNotFoundError = {
+  statusCode: 404,
+  message: "Transcription not found",
+  code: ERROR_CODES.notFound,
+};
+
 export const transcriptionRoutes: FastifyPluginAsyncZod = async (app) => {
+  app.get(
+    "/api/v1/video/transcription/:id",
+    {
+      schema: getTranscriptionSchema,
+    },
+    async (request, reply) => {
+      const { id } = request.params;
+
+      const transcription = await getTranscriptionV1ById(id);
+      if (!transcription) {
+        return reply.code(404).send(transcriptionNotFoundError);
+      }
+
+      return { transcription };
+    },
+  );
+
+  app.get(
+    "/api/v2/video/transcription/:id",
+    {
+      schema: getTranscriptionV2Schema,
+    },
+    async (request, reply) => {
+      const { id } = request.params;
+
+      const transcription = await getTranscriptionV2ById(id);
+      if (!transcription) {
+        return reply.code(404).send(transcriptionNotFoundError);
+      }
+
+      return { transcription };
+    },
+  );
+
   app.get(
     "/api/v1/video/transcription",
     {

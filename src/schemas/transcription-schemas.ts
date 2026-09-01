@@ -1,9 +1,8 @@
-import { z } from 'zod';
-import { errorSchema } from './error-schemas.ts';
+import { z } from "zod";
+import { errorSchema } from "./error-schemas.ts";
 
 export const createTranscriptionBodySchema = z.object({
-  url: z
-    .url({ message: 'The url must be a valid URL' }),
+  url: z.url({ message: "The url must be a valid URL" }),
 });
 
 export const transcriptionSchema = z.object({
@@ -22,11 +21,19 @@ export const listTranscriptionsResponseSchema = z.object({
   transcriptions: z.array(transcriptionSchema),
 });
 
+export const getTranscriptionParamsSchema = z.object({
+  id: z.nanoid(),
+});
+
+export const getTranscriptionResponseSchema = z.object({
+  transcription: transcriptionSchema,
+});
+
 export const createTranscriptionSchema = {
-  tags: ['transcription'],
-  summary: 'Create a video transcription',
+  tags: ["transcription"],
+  summary: "Create a video transcription",
   description:
-    'Sends a YouTube URL and registers a transcription for it. Returns the created transcription record.',
+    "Sends a YouTube URL and registers a transcription for it. Returns the created transcription record.",
   body: createTranscriptionBodySchema,
   response: {
     201: createTranscriptionResponseSchema,
@@ -37,11 +44,23 @@ export const createTranscriptionSchema = {
 };
 
 export const listTranscriptionsSchema = {
-  tags: ['transcription'],
-  summary: 'List transcriptions',
-  description: 'Returns all the transcriptions registered in the application.',
+  tags: ["transcription"],
+  summary: "List transcriptions",
+  description: "Returns all the transcriptions registered in the application.",
   response: {
     200: listTranscriptionsResponseSchema,
+    500: errorSchema,
+  },
+};
+
+export const getTranscriptionSchema = {
+  tags: ["transcription"],
+  summary: "Get a transcription",
+  description: "Returns a single transcription by its ID.",
+  params: getTranscriptionParamsSchema,
+  response: {
+    200: getTranscriptionResponseSchema,
+    404: errorSchema,
     500: errorSchema,
   },
 };

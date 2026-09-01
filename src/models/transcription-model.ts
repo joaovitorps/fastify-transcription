@@ -1,4 +1,4 @@
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { db } from "../db/connection.ts";
 import { transcription } from "../db/schema.ts";
@@ -37,6 +37,44 @@ export async function fetchTranscriptionV2(): Promise<TranscriptionV2[]> {
     })
     .from(transcription)
     .orderBy(desc(transcription.created_at));
+}
+
+export async function getTranscriptionV1ById(
+  id: string,
+): Promise<TranscriptionV1 | null> {
+  const [row] = await db
+    .select({
+      id: transcription.id,
+      youtube_url: transcription.youtube_url,
+      youtube_id: transcription.youtube_id,
+      content: transcription.content,
+      created_by: transcription.created_by,
+      created_at: transcription.created_at,
+      updated_at: transcription.updated_at,
+    })
+    .from(transcription)
+    .where(eq(transcription.id, id));
+
+  return row ?? null;
+}
+
+export async function getTranscriptionV2ById(
+  id: string,
+): Promise<TranscriptionV2 | null> {
+  const [row] = await db
+    .select({
+      id: transcription.id,
+      video_url: transcription.video_url,
+      video_id: transcription.video_id,
+      content: transcription.content,
+      created_by: transcription.created_by,
+      created_at: transcription.created_at,
+      updated_at: transcription.updated_at,
+    })
+    .from(transcription)
+    .where(eq(transcription.id, id));
+
+  return row ?? null;
 }
 
 export async function createTranscription(
