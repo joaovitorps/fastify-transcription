@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
-export const transcription = pgTable('transcription', {
+export const video = pgTable('video', {
   id: varchar('id', { length: 21 }).primaryKey(),
   youtube_url: text('youtube_url').notNull(),
   youtube_id: varchar('youtube_id', { length: 255 }).notNull(),

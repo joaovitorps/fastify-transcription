@@ -1,5 +1,5 @@
 {
-  "name": "fastify-transcription",
+  "name": "ai-social-media",
   "version": "1.0.0",
   "scripts": {
     "dev": "node --env-file=.env.local --watch src/server.ts",

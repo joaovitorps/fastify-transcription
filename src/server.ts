@@ -8,7 +8,7 @@ import {
 } from "@fastify/type-provider-zod";
 import scalarApiReference from "@scalar/fastify-api-reference";
 import { fastify } from "fastify";
-import { transcriptionRoutes } from "./routes/transcription-route.ts";
+import { videoRoutes } from "./routes/video-route.ts";
 import { ERROR_CODES } from "./schemas/error-schemas.ts";
 import { type User } from "./types/auth.ts";
 import { isDatabaseError, mapDatabaseError } from "./utils/database-errors.ts";
@@ -25,8 +25,8 @@ app.register(swagger, {
   openapi: {
     openapi: "3.0.0",
     info: {
-      title: "Fastify Transcription",
-      description: "API to generate transcriptions from YouTube videos.",
+      title: "AI Social Media",
+      description: "API to manage videos from YouTube.",
       version: "1.0.0",
     },
     servers: [
@@ -86,7 +86,7 @@ app.register(async function protectedRoutes(app) {
     done();
   });
 
-  app.register(transcriptionRoutes);
+  app.register(videoRoutes);
 });
 
 const start = async () => {
