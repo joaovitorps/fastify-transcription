@@ -1,0 +1,1 @@
+ALTER TABLE "transcription" RENAME TO "video";
