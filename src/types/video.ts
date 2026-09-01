@@ -1,14 +1,10 @@
 export type Video = {
   id: string;
-  video_url: string;
-  video_id: string;
-  content: string;
-  created_by: string;
-  created_at: Date;
-  updated_at: Date;
+  videoUrl: string;
+  videoId: string;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
-export type CreateVideoData = Omit<
-  Video,
-  "id" | "created_at" | "updated_at"
->;
+export type CreateVideoData = Omit<Video, "id" | "createdAt" | "updatedAt">;

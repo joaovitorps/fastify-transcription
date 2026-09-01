@@ -7,12 +7,11 @@ export const createVideoBodySchema = z.object({
 
 export const videoSchema = z.object({
   id: z.string(),
-  video_url: z.string(),
-  video_id: z.string(),
-  content: z.string(),
-  created_by: z.string(),
-  created_at: z.date(),
-  updated_at: z.date(),
+  videoUrl: z.string(),
+  videoId: z.string(),
+  createdBy: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export const createVideoResponseSchema = videoSchema;

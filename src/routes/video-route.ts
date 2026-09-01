@@ -4,12 +4,12 @@ import {
   fetchVideo,
   getVideoById,
 } from "../models/video-model.ts";
+import { ERROR_CODES } from "../schemas/error-schemas.ts";
 import {
   createVideoSchema,
   getVideoSchema,
   listVideosSchema,
 } from "../schemas/video-schemas.ts";
-import { ERROR_CODES } from "../schemas/error-schemas.ts";
 import { extractVideoId } from "../utils/video.ts";
 
 const invalidVideoUrlError = {
@@ -69,10 +69,9 @@ export const videoRoutes: FastifyPluginAsyncZod = async (app) => {
       }
 
       const video = await createVideo({
-        video_url: url,
-        video_id: videoId,
-        content: "Transcription will be generated here.",
-        created_by: userId,
+        videoUrl: url,
+        videoId: videoId,
+        createdBy: userId,
       });
 
       return reply.code(201).send(video);
