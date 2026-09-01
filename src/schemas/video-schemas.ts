@@ -7,8 +7,8 @@ export const createVideoBodySchema = z.object({
 
 export const videoSchema = z.object({
   id: z.string(),
-  youtube_url: z.string(),
-  youtube_id: z.string(),
+  video_url: z.string(),
+  video_id: z.string(),
   content: z.string(),
   created_by: z.string(),
   created_at: z.date(),
@@ -33,7 +33,7 @@ export const createVideoSchema = {
   tags: ["video"],
   summary: "Create a video",
   description:
-    "Sends a YouTube URL and registers a video for it. Returns the created video record.",
+    "Sends a video URL and registers a video for it. Returns the created video record.",
   body: createVideoBodySchema,
   response: {
     201: createVideoResponseSchema,

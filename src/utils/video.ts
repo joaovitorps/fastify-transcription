@@ -1,4 +1,4 @@
-export function extractYouTubeId(url: string): string | null {
+export function extractVideoId(url: string): string | null {
   const match = url.match(
     /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|v\/)|youtu\.be\/)([\w-]{11})/,
   );

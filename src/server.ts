@@ -26,7 +26,7 @@ app.register(swagger, {
     openapi: "3.0.0",
     info: {
       title: "AI Social Media",
-      description: "API to manage videos from YouTube.",
+      description: "API to manage videos.",
       version: "1.0.0",
     },
     servers: [

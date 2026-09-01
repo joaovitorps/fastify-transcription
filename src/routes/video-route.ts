@@ -1,27 +1,20 @@
 import type { FastifyPluginAsyncZod } from "@fastify/type-provider-zod";
 import {
   createVideo,
-  fetchVideoV1,
-  fetchVideoV2,
-  getVideoV1ById,
-  getVideoV2ById,
+  fetchVideo,
+  getVideoById,
 } from "../models/video-model.ts";
 import {
   createVideoSchema,
   getVideoSchema,
   listVideosSchema,
 } from "../schemas/video-schemas.ts";
-import {
-  createVideoV2Schema,
-  getVideoV2Schema,
-  listVideosV2Schema,
-} from "../schemas/video-v2-schemas.ts";
-import { extractYouTubeId } from "../utils/youtube.ts";
 import { ERROR_CODES } from "../schemas/error-schemas.ts";
+import { extractVideoId } from "../utils/video.ts";
 
-const invalidYouTubeUrlError = {
+const invalidVideoUrlError = {
   statusCode: 400,
-  message: "The provided URL is not a valid YouTube URL",
+  message: "The provided URL is not a valid video URL",
   code: ERROR_CODES.validation,
 };
 
@@ -33,65 +26,36 @@ const videoNotFoundError = {
 
 export const videoRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
-    "/api/v1/video/:id",
+    "/api/v2/video/:id",
     {
       schema: getVideoSchema,
     },
     async (request, reply) => {
       const { id } = request.params;
 
-      const video = await getVideoV1ById(id);
+      const video = await getVideoById(id);
       if (!video) {
         return reply.code(404).send(videoNotFoundError);
       }
 
       return { video };
-    },
-  );
-
-  app.get(
-    "/api/v2/video/:id",
-    {
-      schema: getVideoV2Schema,
-    },
-    async (request, reply) => {
-      const { id } = request.params;
-
-      const video = await getVideoV2ById(id);
-      if (!video) {
-        return reply.code(404).send(videoNotFoundError);
-      }
-
-      return { video };
-    },
-  );
-
-  app.get(
-    "/api/v1/video",
-    {
-      schema: listVideosSchema,
-    },
-    async () => {
-      const videos = await fetchVideoV1();
-
-      return { videos };
     },
   );
 
   app.get(
     "/api/v2/video",
     {
-      schema: listVideosV2Schema,
+      schema: listVideosSchema,
     },
     async () => {
-      const videos = await fetchVideoV2();
+      const videos = await fetchVideo();
 
       return { videos };
     },
   );
 
   app.post(
-    "/api/v1/video",
+    "/api/v2/video",
     {
       schema: createVideoSchema,
     },
@@ -99,39 +63,14 @@ export const videoRoutes: FastifyPluginAsyncZod = async (app) => {
       const { url } = request.body;
       const { id: userId } = request.user;
 
-      const youtubeId = extractYouTubeId(url);
-      if (!youtubeId) {
-        return reply.code(400).send(invalidYouTubeUrlError);
-      }
-
-      const video = await createVideo({
-        youtube_url: url,
-        youtube_id: youtubeId,
-        content: "Transcription will be generated here.",
-        created_by: userId,
-      });
-
-      return reply.code(201).send(video);
-    },
-  );
-
-  app.post(
-    "/api/v2/video",
-    {
-      schema: createVideoV2Schema,
-    },
-    async (request, reply) => {
-      const { url } = request.body;
-      const { id: userId } = request.user;
-
-      const videoId = extractYouTubeId(url);
+      const videoId = extractVideoId(url);
       if (!videoId) {
-        return reply.code(400).send(invalidYouTubeUrlError);
+        return reply.code(400).send(invalidVideoUrlError);
       }
 
       const video = await createVideo({
-        youtube_url: url,
-        youtube_id: videoId,
+        video_url: url,
+        video_id: videoId,
         content: "Transcription will be generated here.",
         created_by: userId,
       });
