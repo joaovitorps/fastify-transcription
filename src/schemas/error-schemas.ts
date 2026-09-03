@@ -9,6 +9,7 @@ export const ERROR_CODES = {
   databaseUnavailable: "DATABASE_UNAVAILABLE",
   databaseError: "DATABASE_ERROR",
   notFound: "NOT_FOUND",
+  conflict: "CONFLICT",
   rootApplication: "ROOT_APPLICATION",
 } as const;
 
@@ -24,6 +25,7 @@ export const errorSchema = z.object({
     ERROR_CODES.databaseUnavailable,
     ERROR_CODES.databaseError,
     ERROR_CODES.notFound,
+    ERROR_CODES.conflict,
     ERROR_CODES.rootApplication,
   ]),
   issues: z.array(z.unknown()).optional(),

@@ -8,15 +8,16 @@ import {
 } from "@fastify/type-provider-zod";
 import scalarApiReference from "@scalar/fastify-api-reference";
 import { fastify, type FastifyInstance } from "fastify";
+import { transcriptionRoutes } from "./routes/transcription-route.ts";
 import { videoRoutes } from "./routes/video-route.ts";
 import { ERROR_CODES } from "./schemas/error-schemas.ts";
 import { type User } from "./types/auth.ts";
 import { isDatabaseError, mapDatabaseError } from "./utils/database-errors.ts";
 
-export function buildApp(
-  options: { logger?: boolean } = {},
-): FastifyInstance {
-  const app = fastify({ logger: options.logger ?? true }).withTypeProvider<ZodTypeProvider>();
+export function buildApp(options: { logger?: boolean } = {}): FastifyInstance {
+  const app = fastify({
+    logger: options.logger ?? true,
+  }).withTypeProvider<ZodTypeProvider>();
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
@@ -62,6 +63,8 @@ export function buildApp(
       return reply.status(mapped.statusCode).send(mapped);
     }
 
+    app.log.error(error);
+
     return reply.status(500).send({
       statusCode: 500,
       message: "Internal Server Error",
@@ -88,6 +91,7 @@ export function buildApp(
     });
 
     app.register(videoRoutes);
+    app.register(transcriptionRoutes);
   });
 
   return app;
