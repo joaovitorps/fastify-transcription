@@ -2,32 +2,23 @@ import { createTool } from "@mastra/core/tools";
 import { fetchTranscript } from "youtube-transcript";
 import { z } from "zod";
 
-export function joinTranscriptSegments(
-  segments: Array<{ text: string }>,
-): string {
-  return segments.map((segment) => segment.text).join(" ");
-}
-
-export const fetchYouTubeTranscriptToolId = "fetch-youtube-transcript";
-
 export const fetchYouTubeTranscriptTool = createTool({
-  id: fetchYouTubeTranscriptToolId,
+  id: "fetch-youtube-transcript",
   description:
-    "Fetch the transcript of a YouTube video given its video ID, returning the joined transcript text.",
+    "Fetch the transcript segments of a YouTube video given its video ID.",
   inputSchema: z.object({
     videoId: z
       .string()
       .describe("The YouTube video ID to fetch the transcript for."),
   }),
-  outputSchema: z.object({
-    content: z
-      .string()
-      .describe("The full transcript text joined into a single paragraph."),
-  }),
+  outputSchema: z.array(
+    z.object({
+      text: z.string(),
+      offset: z.number(),
+      duration: z.number(),
+    }),
+  ),
   execute: async ({ videoId }) => {
-    const segments = await fetchTranscript(videoId);
-    const content = joinTranscriptSegments(segments);
-
-    return { content };
+    return await fetchTranscript(videoId);
   },
 });
