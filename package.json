@@ -6,7 +6,6 @@
     "build": "tsc",
     "start": "node --env-file=.env.local dist/server.js",
     "env:setup": "cp .env.example .env.local && cp .env.example .env.local.e2e",
-    "env:local.e2e": "node --env-file=.env.local.e2e src/utils/test/setup-e2e-env.ts",
     "infra:up": "docker compose up -d && npm run db:migrate",
     "infra:down": "docker compose down",
     "local:setup": "npm run env:setup && npm run infra:up",
@@ -17,7 +16,7 @@
     "test:dev": "npm run test:unit && npm run test:integration",
     "test:unit": "node --test \"src/**/*.unit.test.ts\"",
     "test:integration": "node --experimental-test-module-mocks --test \"src/**/*.integration.test.ts\"",
-    "test:e2e": "npm run env:local.e2e && node --env-file=.env.local.e2e --experimental-test-module-mocks --test \"src/**/*.e2e.test.ts\"",
+    "test:e2e": "node --env-file=.env.local.e2e --test-global-setup=./src/utils/test/setup-e2e.mjs --test-concurrency=1 --experimental-test-module-mocks --test \"src/**/*.e2e.test.ts\"",
     "test:coverage": "node --env-file=.env.local.e2e --experimental-test-coverage --experimental-test-module-mocks --test \"src/**/*.test.ts\""
   },
   "type": "module",

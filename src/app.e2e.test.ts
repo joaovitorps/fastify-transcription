@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { after, before, beforeEach, describe, it } from "node:test";
 import { buildApp } from "./app.ts";
 import { createVideo } from "./utils/test/factories/video.ts";
-import { resetDatabase } from "./utils/test/test-utils.ts";
+import { closeDatabase, resetDatabase } from "./utils/test/test-utils.ts";
 
 const validVideoId = "dQw4w9WgXcQ";
 const validVideoUrl = `https://www.youtube.com/watch?v=${validVideoId}`;
@@ -22,6 +22,7 @@ describe("E2E /api/v2/video", () => {
 
   after(async () => {
     await app.close();
+    await closeDatabase();
   });
 
   describe("POST /api/v2/video", () => {

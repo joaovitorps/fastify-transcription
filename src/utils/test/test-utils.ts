@@ -4,7 +4,12 @@ import { db } from "../../db/connection.ts";
 
 export async function resetDatabase(): Promise<void> {
   await db.execute(sql`TRUNCATE TABLE video_transcription CASCADE;`);
+  await db.execute(sql`TRUNCATE TABLE video_chapter CASCADE;`);
   await db.execute(sql`TRUNCATE TABLE video CASCADE;`);
+}
+
+export async function closeDatabase(): Promise<void> {
+  await db.$client.end();
 }
 
 export async function runMigrations() {

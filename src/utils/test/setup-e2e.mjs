@@ -1,7 +1,9 @@
 import { Client } from "pg";
-import { runMigrations } from "./test-utils.ts";
+import { closeDatabase, runMigrations } from "./test-utils.ts";
 
-const createTestDatabase = async () => {
+export async function globalSetup() {
+  console.log("Global setup executed");
+
   const connection = new Client({
     connectionString: "postgresql://root:root@localhost:5432/postgres",
   });
@@ -10,7 +12,7 @@ const createTestDatabase = async () => {
     await connection.query(`CREATE DATABASE ai_social_media_test`);
   } catch (error) {
     // 42P04 = duplicate_database
-    if ((error as { code?: string }).code !== "42P04") {
+    if (error.code !== "42P04") {
       console.error("Error creating test database:", error);
 
       throw error;
@@ -19,6 +21,9 @@ const createTestDatabase = async () => {
     await runMigrations();
     await connection.end();
   }
-};
+}
 
-await createTestDatabase();
+export async function globalTeardown() {
+  console.log("Global teardown executed");
+  await closeDatabase();
+}
