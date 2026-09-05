@@ -8,6 +8,7 @@ import {
 } from "@fastify/type-provider-zod";
 import scalarApiReference from "@scalar/fastify-api-reference";
 import { fastify, type FastifyInstance } from "fastify";
+import { chapterRoutes } from "./routes/chapter-route.ts";
 import { transcriptionRoutes } from "./routes/transcription-route.ts";
 import { videoRoutes } from "./routes/video-route.ts";
 import { ERROR_CODES } from "./schemas/error-schemas.ts";
@@ -92,6 +93,7 @@ export function buildApp(options: { logger?: boolean } = {}): FastifyInstance {
 
     app.register(videoRoutes);
     app.register(transcriptionRoutes);
+    app.register(chapterRoutes);
   });
 
   return app;

@@ -27,3 +27,18 @@ export const videoTranscription = pgTable("video_transcription", {
     .defaultNow(),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
+
+export const videoChapter = pgTable("video_chapter", {
+  id: varchar("id", { length: 21 }).primaryKey(),
+  videoId: varchar("video_id", { length: 21 })
+    .notNull()
+    .references(() => video.id),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+});
